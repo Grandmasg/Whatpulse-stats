@@ -1,0 +1,95 @@
+<div>
+    <div class="container">
+    	<center ng-hide="data.Team == ''"><h1>{{Team}}</h1></center>
+        <blockquote><h3>Daily {{day | date:'dd-MM-yyyy'}}</h3></blockquote>
+        <div ng-show="loading" class="alert alert-info col-md-4"><h2>Loading data <i class="glyphicon glyphicon-refresh spinning"></i></h2></div>
+        <div class="row" ng-show="!loading">
+            <div class="col-md-2">
+            	PageSize:<br>
+			    <select ng-model="entryLimit" class="form-control">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+			    </select>
+            </div>
+            <div class="col-md-3">Search:
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                        <input type="text" ng-model="search.Username" ng-change="filter()" placeholder="Search" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h5>Found {{filtered.length}} of {{totalItems}} pulsers</h5>
+            </div>
+        	<div class="col-md-12" ng-show="filteredItems > 0">
+            <span class="label">Ordered By: {{sortType}}, Reverse Sort: {{sortReverse}}, Search: {{search}}</span>
+                <table class="table table-striped table-bordered">
+	                <thead id="daily">
+	                    <tr>
+	                        <th>nr&nbsp;<a id="today" ng-click="sort_by('today');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                        <th>Name&nbsp;<a id="Username" ng-click="sort_by('Username');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                        <th>Keys&nbsp;<a id="diffrence_keys" ng-click="sort_by('diffrence_keys');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                        <th>Clicks&nbsp;<a id="diffrence_clicks" ng-click="sort_by('diffrence_clicks');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                        <th>Download&nbsp;<a id="diffrence_DownloadMB" ng-click="sort_by('diffrence_DownloadMB');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                        <th>Upload&nbsp;<a id="diffrence_UploadMB" ng-click="sort_by('diffrence_UploadMB');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                        <th>Uptime&nbsp;<a id="diffrence_UptimeSeconds" ng-click="sort_by('diffrence_UptimeSeconds');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                        <th>Pulses&nbsp;<a id="diffrence_Pulses" ng-click="sort_by('diffrence_Pulses');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <tr ng-repeat="data in filtered = (list | filter:search | orderBy : sortType :sortReverse) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
+	                        <td uib-tooltip-html="'<center><b><u>Daily rank:</u></b></center>Today: {{data.today|textOrNumber:0}}<br />Yesterday: {{data.yesterday|textOrNumber:0}}'" tooltip-append-to-body="true">
+	                        {{data.today}} <span ng-bind-html="rank(data.today,data.yesterday)"></span><!-- {{((currentPage-1)*entryLimit) + ($index + 1) }} --></td>
+	                        <td uib-tooltip-html="'<center><b><u>Last pulse:</u></b></center>{{data.LastPulse}}'" tooltip-append-to-body="true">
+	                        <a href="http://whatpulse.org/stats/users/{{data.UserID}}/" class="lightview" data-lightview-type="iframe" data-lightview-group="Daily users" data-lightview-title="{{data.Username}}" data-lightview-options="skin: 'light', width: 1024 , height: 768" ng-bind-html="data.Username | highlight:search.Username"></a>
+	                        <div class="pull-right smaller" ng-hide="data.Team == ''">{{data.Team}}</div>
+	                        </td>
+	                        <td uib-tooltip-html="'<center><b><u>Key rank:</u></b></center>Today: {{data.Rank_Keys_today|textOrNumber:0}}<br />Yesterday: {{data.Rank_Keys_yesterday|textOrNumber:0}}'" tooltip-append-to-body="true">{{data.diffrence_keys|textOrNumber:0}} <span ng-bind-html="display(data.diffrence_Rank_Keys)"></span></td>
+	                        <td uib-tooltip-html="'<center><b><u>Click rank:</u></b></center>Today: {{data.Rank_Clicks_today|textOrNumber:0}}<br />Yesterday: {{data.Rank_Clicks_yesterday|textOrNumber:0}}'" tooltip-append-to-body="true">{{data.diffrence_clicks|textOrNumber:0}} <span ng-bind-html="display(data.diffrence_Rank_Clicks)"></span></td>
+	                        <td uib-tooltip-html="'<center><b><u>Download rank:</u></b></center>Today: {{data.Rank_Download_today|textOrNumber:0}}<br />Yesterday: {{data.Rank_Download_yesterday|textOrNumber:0}}'" tooltip-append-to-body="true">{{GB(data.diffrence_DownloadMB)}} <span ng-bind-html="display(data.diffrence_Rank_Download)"></span></td>
+	                        <td uib-tooltip-html="'<center><b><u>Upload rank:</u></b></center>Today: {{data.Rank_Upload_today|textOrNumber:0}}<br />Yesterday: {{data.Rank_Upload_yesterday|textOrNumber:0}}'" tooltip-append-to-body="true">{{GB(data.diffrence_UploadMB)}} <span ng-bind-html="display(data.diffrence_Rank_Upload)"></span></td>
+	                        <td uib-tooltip-html="'<center><b><u>Uptime rank:</u></b></center>Today: {{data.Rank_Uptime_today|textOrNumber:0}}<br />Yesterday: {{data.Rank_Uptime_yesterday|textOrNumber:0}}'" tooltip-append-to-body="true">{{data.diffrence_UptimeSeconds|textOrNumber:0}} <span ng-bind-html="display(data.diffrence_Rank_Uptime)"></span></td>
+	                        <td uib-tooltip-html="'<center><b><u>Pulses:</u></b></center>Today: {{data.Pulses_today|textOrNumber:0}}<br />Yesterday: {{data.Pulses_yesterday|textOrNumber:0}}'" tooltip-append-to-body="true">{{data.diffrence_Pulses|textOrNumber:0}}</td>
+	                    </tr>
+	                </tbody>
+					<tfoot>
+						<tr>
+							<th colspan="2">Totals:</th>
+							<th>{{list|sumByKey:'diffrence_keys'|textOrNumber:0}}</th>
+							<th>{{list|sumByKey:'diffrence_clicks'|textOrNumber:0}}</th>
+							<th>{{list|sumByKey:'diffrence_DownloadMB'|textOrNumber:0}}</th>
+							<th>{{list|sumByKey:'diffrence_UploadMB'|textOrNumber:0}}</th>
+							<th>{{list|sumByKey:'diffrence_UptimeSeconds'|textOrNumber:0}}</th>
+							<th>{{list|sumByKey:'diffrence_Pulses'|textOrNumber:0}}</th>
+						</tr>
+					</tfoot>
+                </table>
+            </div>
+            <div class="col-md-12" ng-show="filteredItems == 0">
+                <div class="col-md-12">
+                    <h4>No pulsers found</h4>
+                </div>
+            </div>
+        </div>
+        <div ng-show="numPages > 1 && !loading">
+				Page: {{currentPage}} / {{numPages}}
+		</div>
+		<div ng-show="numPages > 1 && !loading">
+			<uib-pagination boundary-links="true" rotate="false" ng-change="pageChanged()" ng-model="currentPage" max-size="maxSize" num-pages="numPages" items-per-page="entryLimit" total-items="filteredItems" class="pagination" previous-text="&lsaquo;" next-text="&rsaquo;"></uib-pagination>
+		</div>
+		<highchart ng-show="!loading && !filteredItems == 0" id="chart1" config="highchartsNG"></highchart>
+		<div ng-show="!loading && !filteredItems == 0" class="btn-group">
+			<label class="btn btn-sm btn-success" ng-model="radioModel" uib-btn-radio="'bar'" ng-click="graphchange('bar')">Bar</label>
+			<label class="btn btn-sm btn-success" ng-model="radioModel" uib-btn-radio="'column'" ng-click="graphchange('column')">Column</label>
+		</div>
+		<div ng-show="!loading && !filteredItems == 0" class="btn-group">
+			<label class="btn btn-sm btn-success" ng-model="radioModel1" uib-btn-radio="'400'" ng-click="graphchange1('400')">400</label>
+			<label class="btn btn-sm btn-success" ng-model="radioModel1" uib-btn-radio="'600'" ng-click="graphchange1('600')">600</label>
+			<label class="btn btn-sm btn-success" ng-model="radioModel1" uib-btn-radio="'800'" ng-click="graphchange1('800')">800</label>
+		</div>
+		<br /><br />
+    </div>
+</div>

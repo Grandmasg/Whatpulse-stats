@@ -1,0 +1,51 @@
+#content {
+    margin-top: 60px;
+}
+
+.navbar .label {
+    position: relative;
+    top: 11px;
+}
+
+.top-row {
+	text-align: center;
+	margin: 10px 0;
+}
+
+.top-row a div {
+	font-size: 10px;
+	line-height: 12px;
+}
+
+.anim.ng-enter {
+	transition: opacity 1s;
+	opacity: 0.0;
+}
+
+.anim.ng-enter-active {
+	opacity: 1.0;
+}
+.anim.ng-leave {
+    display: none;
+}
+
+.glyphicon.spinning {
+    animation: spin 1s infinite linear;
+    -webkit-animation: spin2 1s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+ul>li, a{cursor: pointer;}
+
+.highlightedText {
+    background: white;
+}

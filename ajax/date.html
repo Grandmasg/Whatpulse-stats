@@ -1,0 +1,15 @@
+<div>
+    <div class="container" style="padding-top: 60px;">
+        <div class="row">
+            <ul class="pager">
+                <li><a id="dag-5" title="5 days back!" ui-sref="{offset: Offsetm5, team: Team}" ui-sref-opts="{reload: true}"><b><<< 5 Prev</b></a></li>
+                <li><a ui-sref="{offset: Offsetm3, team: Team}" ui-sref-opts="{reload: true}">{{daym3 | date:'dd-MM-yyyy'}}</a></li>        
+                <li><a ui-sref="{offset: Offsetm2, team: Team}" ui-sref-opts="{reload: true}">{{daym2 | date:'dd-MM-yyyy'}}</a></li>
+                <li><a ui-sref="{offset: Offsetm1, team: Team}" ui-sref-opts="{reload: true}">{{daym1 | date:'dd-MM-yyyy'}}</a></li>
+                <li class="disabled"><a ui-sref="{offset: Offset, team: Team}" ui-sref-opts="{reload: true}">{{day | date:'dd-MM-yyyy'}}</a></li>
+                <li><a ui-sref="{offset: Offsetp1, team: Team}" ui-sref-opts="{reload: true}">{{dayp1 | date:'dd-MM-yyyy'}}</a></li>
+                <li><a id="dag+5" title="5 days ahead!" ui-sref="{offset: Offsetp5, team: Team}" ui-sref-opts="{reload: true}"><b>Next 5 >>></b></a></li>
+            </ul>
+        </div>
+    </div>
+</div>

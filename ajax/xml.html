@@ -1,0 +1,8 @@
+<div>
+    <div class="container">
+    	<center ng-hide="data.Team == ''"><h1>{{Team}}</h1></center>
+        <blockquote><h3>Xml {{day | date:'dd-MM-yyyy'}}</h3></blockquote>
+		<div ng-show="loading" class="alert alert-info col-md-4"><h2>Loading data <i class="glyphicon glyphicon-refresh spinning"></i></h2></div>
+		<textarea ng-show="!loading" class="form-control" style="width:1000px;height:800px;font-size:9px;" onclick="this.focus();this.select()" rows="3" id="xml" name="xml" ng-model="list"></textarea>
+	</div>
+</div>

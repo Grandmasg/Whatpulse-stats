@@ -1,0 +1,94 @@
+<div>
+    <div class="container">
+    	<center ng-hide="data.Team == ''"><h1>{{Team}}</h1></center>
+        <blockquote><h3>Totals {{day | date:'dd-MM-yyyy'}}</h3></blockquote>
+        <div ng-show="loading" class="alert alert-info col-md-4"><h2>Loading data <i class="glyphicon glyphicon-refresh spinning"></i></h2></div>
+        <div class="row" ng-show="!loading">
+            <div class="col-md-2">PageSize:
+			    <select ng-model="entryLimit" class="form-control">
+                    <option>10</option>
+                    <option>25</option>
+                    <option>50</option>
+                    <option>100</option>
+                </select>
+            </div>
+            <div class="col-md-3">Search:
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                        <input type="text" ng-model="search.Username" ng-change="filter()" placeholder="Search" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h5>Found {{filtered.length}} of {{totalItems}} pulsers</h5>
+            </div>
+        	<div class="col-md-12" ng-show="filteredItems > 0">
+            <span class="label">Ordered By: {{sortType}}, Reverse Sort: {{sortReverse}}, Search: {{search}}</span>
+                <table class="table table-striped table-bordered">
+	                <thead id="totals">
+	                    <tr>
+	                        <th>nr&nbsp;<a id="today" ng-click="sort_by('today');"><i class="glyphicon glyphicon-sort pull-right"></i></th>
+	                        <th>Name&nbsp;<a id="Username" ng-click="sort_by('Username');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                        <th>Keys&nbsp;<a id="Keys1" ng-click="sort_by('Keys1');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                        <th>Clicks&nbsp;<a id="Clicks" ng-click="sort_by('Clicks');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                        <th>Download&nbsp;<a id="DownloadMB" ng-click="sort_by('DownloadMB');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                        <th>Upload&nbsp;<a id="UploadMB" ng-click="sort_by('UploadMB');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                        <th>Uptime&nbsp;<a id="UptimeSeconds" ng-click="sort_by('UptimeSeconds');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                        <th>Pulses&nbsp;<a id="Pulses" ng-click="sort_by('Pulses');"><i class="glyphicon glyphicon-sort pull-right"></i></a></th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <tr ng-repeat="data in filtered = (list | filter:search | orderBy : sortType :sortReverse) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
+	                        <td uib-tooltip-html="'<center><b><u>Totals rank:</u></b></center>Today: {{data.today|textOrNumber:0}}<br />Yesterday: {{data.yesterday|textOrNumber:0}}'" tooltip-append-to-body="true">
+	                        {{data.today}} <span ng-bind-html="rank(data.today,data.yesterday)"></span><!-- {{((currentPage-1)*entryLimit)+($index + 1)}} --></td>
+	                        <td uib-tooltip-html="'<center><b><u>Last pulse:</u></b></center>{{data.LastPulse}}'" tooltip-append-to-body="true">
+	                        <a href="http://whatpulse.org/stats/users/{{data.UserID}}/" class="lightview" data-lightview-type="iframe" data-lightview-group="Total users" data-lightview-title="{{data.Username}}" data-lightview-options="skin: 'light', width: 1024 , height: 768" ng-bind-html="data.Username | highlight:search.Username"></a>
+	                        <div class="pull-right smaller" ng-hide="data.Team == ''">{{data.Team}}</div>
+	                        </td>
+	                        <td uib-tooltip-html="'<center><b><u>Key rank:</u></b></center>Today: {{data.Rank_Keys|textOrNumber:0}}'" tooltip-append-to-body="true">{{data.Keys1|textOrNumber:0}}</td>
+	                        <td uib-tooltip-html="'<center><b><u>Click rank:</u></b></center>Today: {{data.Rank_Clicks|textOrNumber:0}}'" tooltip-append-to-body="true">{{data.Clicks|textOrNumber:0}}</td>
+	                        <td uib-tooltip-html="'<center><b><u>Download rank:</u></b></center>Today: {{data.Rank_Download|textOrNumber:0}}'" tooltip-append-to-body="true">{{GB(data.DownloadMB)}}</td>
+	                        <td uib-tooltip-html="'<center><b><u>Upload rank:</u></b></center>Today: {{data.Rank_Upload|textOrNumber:0}}'" tooltip-append-to-body="true">{{GB(data.UploadMB)}}</td>
+	                        <td uib-tooltip-html="'<center><b><u>Uptime rank:</u></b></center>Today: {{data.Rank_Uptime|textOrNumber:0}}'" tooltip-append-to-body="true">{{data.UptimeSeconds|textOrNumber:0}}</td>
+	                        <td>{{data.Pulses|textOrNumber:0}}</td>
+	                    </tr>
+	                </tbody>
+					<tfoot>
+						<tr>
+							<th colspan="2">Totals:</th>
+							<th>{{list|sumByKey:'Keys1'|textOrNumber:0}}</th>
+							<th>{{list|sumByKey:'Clicks'|textOrNumber:0}}</th>
+							<th>{{list|sumByKey:'DownloadMB'|textOrNumber:0}}</th>
+							<th>{{list|sumByKey:'UploadMB'|textOrNumber:0}}</th>
+							<th>{{list|sumByKey:'UptimeSeconds'|textOrNumber:0}}</th>
+							<th>{{list|sumByKey:'Pulses'|textOrNumber:0}}</th>
+						</tr>
+					</tfoot>
+                </table>
+            </div>
+            <div class="col-md-12" ng-show="filteredItems == 0">
+                <div class="col-md-12">
+                    <h4>No pulsers found</h4>
+                </div>
+            </div>
+        </div>
+        <div ng-show="numPages > 1 && !loading">
+				Page: {{currentPage}} / {{numPages}}
+		</div>
+		<div ng-show="numPages > 1 && !loading">
+			<uib-pagination boundary-links="true" rotate="false" ng-change="pageChanged()" ng-model="currentPage" max-size="maxSize" num-pages="numPages" items-per-page="entryLimit" total-items="filteredItems" class="pagination" previous-text="&lsaquo;" next-text="&rsaquo;"></uib-pagination>
+		</div>
+		<highchart ng-show="!loading && !filteredItems == 0" id="chart2" config="highchartsNG"></highchart>
+		<div ng-show="!loading && !filteredItems == 0" class="btn-group">
+			<label class="btn btn-sm btn-success" ng-model="radioModel" uib-btn-radio="'bar'" ng-click="graphchange('bar')">Bar</label>
+			<label class="btn btn-sm btn-success" ng-model="radioModel" uib-btn-radio="'column'" ng-click="graphchange('column')">Column</label>
+		</div>
+		<div ng-show="!loading && !filteredItems == 0" class="btn-group">
+			<label class="btn btn-sm btn-success" ng-model="radioModel1" uib-btn-radio="'400'" ng-click="graphchange1('400')">400</label>
+			<label class="btn btn-sm btn-success" ng-model="radioModel1" uib-btn-radio="'600'" ng-click="graphchange1('600')">600</label>
+			<label class="btn btn-sm btn-success" ng-model="radioModel1" uib-btn-radio="'800'" ng-click="graphchange1('800')">800</label>
+		</div>
+		<br /><br />
+    </div>
+</div>

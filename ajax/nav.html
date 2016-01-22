@@ -1,0 +1,32 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" ui-sref="app.daily({offset: 0, team: ''})" ui-sref-opts="{reload: true}">Grandmasg</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+            	<li ui-sref-active="active"><a ui-sref="app.daily({offset: Offset, team: Team})" ui-sref-opts="{reload: true}">Daily</a></li>
+            	<li ui-sref-active="active"><a ui-sref="app.totals({offset: Offset, team: Team})" ui-sref-opts="{reload: true}">Totals</a></li>
+                <li class="dropdown" uib-dropdown>
+                    <a href="" class="dropdown-toggle" uib-dropdown-toggle>Subteams <span class="caret"></span></a>
+                    <ul class="dropdown-menu scrollable-menu" uib-dropdown-menu>
+                        <li ng-repeat="x in listteam" ng-class="{'active':x.Teamname == Team}"><a ui-sref="{offset: Offset, team: x.Teamname}" ui-sref-opts="{reload: true}">{{x.Team}} <small>({{x.aantal}})</small></a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+            	<li ui-sref-active="active"><a ui-sref="app.xml({offset: Offset, team: Team})" ui-sref-opts="{reload: true}">Xml</a></li>
+                <!--<li><a href=""><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>-->
+                <!--<li><a href=""><span class="glyphicon glyphicon-log-in"></span> Login</a></li>-->
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
