@@ -18,4 +18,3 @@ Team 1295 has around 1200 users.
 > ### Attention: 
 > * Please put the cron file outside the public_html 
 > * Complete stats on the third day
-Quote break.
