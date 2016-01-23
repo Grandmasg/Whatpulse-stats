@@ -1,10 +1,8 @@
-"# H1 Whatpulse Team Stats" 
+# Whatpulse Team Stats"
 
-"Just another team stats site ;)"
-"Sample: http://www.grandmasg.nl/WPNEW"
+Just another team stats site ;)
+Sample site: http://www.grandmasg.nl/WPNEW"
 
-"
-> # H3 Attention: 
+> ### Attention: 
 > Please put the cron file outside the public_html 
 Quote break.
-"
